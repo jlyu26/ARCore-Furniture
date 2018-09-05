@@ -31,3 +31,26 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "com.google.ar.sceneform.ux:sceneform-ux:1.4.0" // 1.0.0
 }
+
+apply plugin: 'com.google.ar.sceneform.plugin'
+
+sceneform.asset('sampledata/chair/WoodChair_01(1).obj',
+        'default',
+        'sampledata/chair/WoodChair_01(1).sfa',
+        'src/main/assets/chair')
+
+sceneform.asset('sampledata/sofa/Sofa_01.obj',
+        'default',
+        'sampledata/sofa/Sofa_01.sfa',
+        'src/main/assets/sofa')
+
+sceneform.asset('sampledata/table/Table_Large_Rectangular_01.obj',
+        'default',
+        'sampledata/table/Table_Large_Rectangular_01.sfa',
+        'src/main/assets/table')
+
+
+sceneform.asset('sampledata/lamp/LampPost.obj',
+        'default',
+        'sampledata/lamp/LampPost.sfa',
+        'src/main/assets/lamp')
