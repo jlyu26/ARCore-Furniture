@@ -6,15 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sceneform_fragment"
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintVertical_weight="1">
+
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear" />
+
+        <Button
+            android:id="@+id/resolve_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resolve" />
+
+    </LinearLayout>
+
     <fragment
         android:id="@+id/sceneform_fragment"
-        android:name="com.google.ar.sceneform.ux.ArFragment"
+        android:name="edu.wpi.jlyu.sceneformfurniture.CustomArFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_layout"
         app:layout_constraintBottom_toTopOf="@+id/gallery_layout"
         app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintVertical_weight="9"
+        app:layout_constraintVertical_weight="8"
         />
 
     <LinearLayout

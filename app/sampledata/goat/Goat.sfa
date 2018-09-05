@@ -1,0 +1,55 @@
+{
+   bound_relative_root: {
+      x: 0.5,
+      y: 0,
+      z: 0.5,
+   },
+   materials: [
+      {
+         name: "Goat_mat",
+         parameters: [
+            {
+               baseColor: "Goat_BaseColor",
+            },
+            {
+               baseColorTint: [
+                  0.5,
+                  0.5,
+                  0.5,
+                  1,
+               ],
+            },
+            {
+               metallic: 0,
+            },
+            {
+               roughness: 1,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/obj_material.sfm",
+      },
+   ],
+   model: {
+      attributes: [
+         "Position",
+         "TexCoord",
+         "Orientation",
+      ],
+      collision: {},
+      file: "sampledata/goat/Goat.obj",
+      name: "Goat",
+      recenter: "root",
+      scale: 0.12,
+   },
+   samplers: [
+      {
+         file: "sampledata/goat\\Goat_BaseColor.png",
+         name: "Goat_BaseColor",
+         pipeline_name: "Goat_BaseColor.png",
+      },
+   ],
+   version: "0.52:1",
+}

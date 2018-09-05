@@ -54,3 +54,8 @@ sceneform.asset('sampledata/lamp/LampPost.obj',
         'default',
         'sampledata/lamp/LampPost.sfa',
         'src/main/assets/lamp')
+
+sceneform.asset('sampledata/goat/Goat.obj',
+        'default',
+        'sampledata/goat/Goat.sfa',
+        'src/main/assets/goat')

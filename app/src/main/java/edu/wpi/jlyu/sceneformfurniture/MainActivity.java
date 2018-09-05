@@ -19,7 +19,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArFragment fragment;
+    private CustomArFragment fragment;
 
     private Uri selectedObject;
 
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
+        fragment = (CustomArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
 
         InitializeGallery();
 
@@ -53,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
         chair.setContentDescription("chair");
         chair.setOnClickListener(view -> {selectedObject = Uri.parse("chair.sfb");});
         gallery.addView(chair);
+
+        ImageView goat = new ImageView( this );
+        goat.setImageResource(R.drawable.goat_thumb);
+        goat.setContentDescription("goat");
+        goat.setOnClickListener(view -> {selectedObject = Uri.parse("goat.sfb");});
+        gallery.addView(goat);
 
         ImageView lamp = new ImageView( this );
         lamp.setImageResource(R.drawable.lamp_thumb);
