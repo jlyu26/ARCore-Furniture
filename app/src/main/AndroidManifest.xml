@@ -18,7 +18,7 @@
         </activity>
         <meta-data
             android:name="com.google.android.ar.API_KEY"
-            android:value="AIzaSyCgBupTFkgQQ1lg-bSCG8d40f6HE869YqU" />
+            android:value="" />
 
         <meta-data android:name="com.google.ar.core" android:value="required" />
     </application>

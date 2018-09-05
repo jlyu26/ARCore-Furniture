@@ -14,6 +14,7 @@ import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.ux.ArFragment;
@@ -24,6 +25,16 @@ public class MainActivity extends AppCompatActivity {
     private CustomArFragment fragment;
     private Anchor cloudAnchor;
 
+    private enum AppAnchorState {
+        NONE,
+        HOSTING,
+        HOSTED
+    }
+
+    private AppAnchorState appAnchorState = AppAnchorState.NONE;
+
+    private SnackbarHelper snackbarHelper = new SnackbarHelper();
+
     private Uri selectedObject;
 
     @Override
@@ -32,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         fragment = (CustomArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
+        // fragment.getPlaneDiscoveryController().hide();  // Hide initial hand gesture
+        fragment.getArSceneView().getScene().setOnUpdateListener(this::onUpdateFrame);
 
         Button clearButton = findViewById(R.id.clear_button);
         clearButton.setOnClickListener(new View.OnClickListener() {
@@ -45,13 +58,17 @@ public class MainActivity extends AppCompatActivity {
 
         fragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                     if (plane.getType() != Plane.Type.HORIZONTAL_UPWARD_FACING) {
+                     if (plane.getType() != Plane.Type.HORIZONTAL_UPWARD_FACING ||
+                             appAnchorState != AppAnchorState.NONE) {
                          return;
                      }
 
-                     Anchor newAnchor = hitResult.createAnchor();
+                     Anchor newAnchor = fragment.getArSceneView().getSession().hostCloudAnchor(hitResult.createAnchor());
 
                      setCloudAnchor(newAnchor);
+
+                     appAnchorState = AppAnchorState.HOSTING;
+                     snackbarHelper.showMessage(this, "Now hosting anchor...");
 
                      placeObject(fragment, cloudAnchor, selectedObject);
                 }
@@ -64,6 +81,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         cloudAnchor = newAnchor;
+        appAnchorState = AppAnchorState.NONE;
+        snackbarHelper.hide(this);
+    }
+
+    private void onUpdateFrame(FrameTime frameTime) {
+        checkUpdatedAnchor();
+    }
+
+    private synchronized void checkUpdatedAnchor() {
+        if (appAnchorState != AppAnchorState.HOSTING) {
+            return;
+        }
+        Anchor.CloudAnchorState cloudState = cloudAnchor.getCloudAnchorState();
+        if (cloudState.isError()) {
+            snackbarHelper.showMessageWithDismiss(this, "Error hosting anchor: "
+            + cloudState);
+            appAnchorState = AppAnchorState.NONE;
+        }
+        else if (cloudState == Anchor.CloudAnchorState.SUCCESS) {
+            snackbarHelper.showMessageWithDismiss(this, "Anchor hosted! Cloud ID: "
+            + cloudAnchor.getCloudAnchorId());
+            appAnchorState = AppAnchorState.HOSTED;
+        }
     }
 
     private void InitializeGallery() {
