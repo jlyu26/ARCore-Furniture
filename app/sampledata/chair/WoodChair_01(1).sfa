@@ -42,7 +42,7 @@
       file: "sampledata/chair/WoodChair_01(1).obj",
       name: "WoodChair_01(1)",
       recenter: "root",
-      scale: 0.0063870000000000003,
+      scale: 0.003,
    },
    version: "0.52:1",
 }

@@ -67,7 +67,7 @@
       file: "sampledata/sofa/Sofa_01.obj",
       name: "Sofa_01",
       recenter: "root",
-      scale: 0.102411,
+      scale: 0.06,
    },
    version: "0.52:1",
 }

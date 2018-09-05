@@ -20,10 +20,10 @@
                ],
             },
             {
-               metallic: 0,
+               metallic: 0.5,
             },
             {
-               roughness: 1,
+               roughness: 0.5,
             },
             {
                opacity: null,
@@ -42,7 +42,7 @@
       file: "sampledata/lamp/LampPost.obj",
       name: "LampPost",
       recenter: "root",
-      scale: 0.060885000000000002,
+      scale: 0.03,
    },
    samplers: [
       {
