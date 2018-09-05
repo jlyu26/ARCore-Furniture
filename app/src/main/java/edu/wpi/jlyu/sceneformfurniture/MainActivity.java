@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -20,6 +22,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 public class MainActivity extends AppCompatActivity {
 
     private CustomArFragment fragment;
+    private Anchor cloudAnchor;
 
     private Uri selectedObject;
 
@@ -30,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
 
         fragment = (CustomArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
 
+        Button clearButton = findViewById(R.id.clear_button);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCloudAnchor(null);
+            }
+        });
+
         InitializeGallery();
 
         fragment.setOnTapArPlaneListener(
@@ -38,11 +49,21 @@ public class MainActivity extends AppCompatActivity {
                          return;
                      }
 
-                     Anchor anchor = hitResult.createAnchor();
+                     Anchor newAnchor = hitResult.createAnchor();
 
-                     placeObject(fragment, anchor, selectedObject);
+                     setCloudAnchor(newAnchor);
+
+                     placeObject(fragment, cloudAnchor, selectedObject);
                 }
         );
+    }
+
+    private void setCloudAnchor (Anchor newAnchor) {
+        if (cloudAnchor != null) {
+            cloudAnchor.detach();
+        }
+
+        cloudAnchor = newAnchor;
     }
 
     private void InitializeGallery() {
