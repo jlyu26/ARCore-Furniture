@@ -28,12 +28,16 @@ public class MainActivity extends AppCompatActivity {
     private enum AppAnchorState {
         NONE,
         HOSTING,
-        HOSTED
+        HOSTED,
+        RESOLVING,
+        RESOLVED
     }
 
     private AppAnchorState appAnchorState = AppAnchorState.NONE;
 
     private SnackbarHelper snackbarHelper = new SnackbarHelper();
+
+    private StorageManager storageManager;
 
     private Uri selectedObject;
 
@@ -43,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         fragment = (CustomArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
-        // fragment.getPlaneDiscoveryController().hide();  // Hide initial hand gesture
+        fragment.getPlaneDiscoveryController().hide();  // Hide initial hand gesture
         fragment.getArSceneView().getScene().setOnUpdateListener(this::onUpdateFrame);
+
+        InitializeGallery();
 
         Button clearButton = findViewById(R.id.clear_button);
         clearButton.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +60,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        InitializeGallery();
+        Button resolveButton = findViewById(R.id.resolve_button);
+        resolveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cloudAnchor != null) {
+                    snackbarHelper.showMessageWithDismiss(getParent(), "Please clear anchor.");
+                    return;
+                }
+                ResolveDialogFragment dialog = new ResolveDialogFragment();
+                dialog.setOkListener(MainActivity.this::onResolveOKPressed);
+                dialog.show(getSupportFragmentManager(), "Resolve");
+            }
+        });
 
         fragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
@@ -68,11 +86,24 @@ public class MainActivity extends AppCompatActivity {
                      setCloudAnchor(newAnchor);
 
                      appAnchorState = AppAnchorState.HOSTING;
-                     snackbarHelper.showMessage(this, "Now hosting anchor...");
+                     snackbarHelper.showMessage(this, "Hosting Anchor...");
 
                      placeObject(fragment, cloudAnchor, selectedObject);
                 }
         );
+
+        storageManager = new StorageManager(this);
+    }
+
+    private void onResolveOKPressed(String dialogValue) {
+        int shortCode = Integer.parseInt(dialogValue);
+        storageManager.getCloudAnchorID(shortCode, (cloudAnchorId) -> {
+            Anchor resolvedAnchor = fragment.getArSceneView().getSession().resolveCloudAnchor(cloudAnchorId);
+            setCloudAnchor(resolvedAnchor);
+            placeObject(fragment, cloudAnchor, selectedObject);
+            snackbarHelper.showMessage(this, "Resolving Anchor...");
+            appAnchorState = AppAnchorState.RESOLVING;
+        });
     }
 
     private void setCloudAnchor (Anchor newAnchor) {
@@ -89,20 +120,42 @@ public class MainActivity extends AppCompatActivity {
         checkUpdatedAnchor();
     }
 
-    private synchronized void checkUpdatedAnchor() {
-        if (appAnchorState != AppAnchorState.HOSTING) {
+    // private synchronized void checkUpdatedAnchor() {
+    private void checkUpdatedAnchor() {
+        if (appAnchorState != AppAnchorState.HOSTING && appAnchorState != AppAnchorState.RESOLVING) {
             return;
         }
         Anchor.CloudAnchorState cloudState = cloudAnchor.getCloudAnchorState();
-        if (cloudState.isError()) {
-            snackbarHelper.showMessageWithDismiss(this, "Error hosting anchor: "
-            + cloudState);
-            appAnchorState = AppAnchorState.NONE;
+        if (appAnchorState == AppAnchorState.HOSTING) {
+
+            if (cloudState.isError()) {
+                snackbarHelper.showMessageWithDismiss(this, "Error hosting anchor: "
+                        + cloudState);
+                appAnchorState = AppAnchorState.NONE;
+            } else if (cloudState == Anchor.CloudAnchorState.SUCCESS) {
+                storageManager.nextShortCode((shortCode) -> {
+                    if (shortCode == null) {
+                        snackbarHelper.showMessageWithDismiss(this, "Couldn't get shortcode.");
+                        return;
+                    }
+                    storageManager.storeUsingShortCode(shortCode, cloudAnchor.getCloudAnchorId());
+
+                    snackbarHelper.showMessageWithDismiss(this, "Anchor hosted! Cloud Short Code: "
+                            + shortCode);
+                });
+
+                appAnchorState = AppAnchorState.HOSTED;
+            }
         }
-        else if (cloudState == Anchor.CloudAnchorState.SUCCESS) {
-            snackbarHelper.showMessageWithDismiss(this, "Anchor hosted! Cloud ID: "
-            + cloudAnchor.getCloudAnchorId());
-            appAnchorState = AppAnchorState.HOSTED;
+        else if (appAnchorState == AppAnchorState.RESOLVING) {
+            if (cloudState.isError()) {
+                snackbarHelper.showMessageWithDismiss(this, "Error resolving anchor: "
+                        + cloudState);
+                appAnchorState = AppAnchorState.NONE;
+            } else if (cloudState == Anchor.CloudAnchorState.SUCCESS) {
+                snackbarHelper.showMessageWithDismiss(this, "Anchor resolved!");
+                appAnchorState = AppAnchorState.RESOLVED;
+            }
         }
     }
 

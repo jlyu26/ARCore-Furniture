@@ -21,11 +21,13 @@
             android:value="" />
 
         <meta-data android:name="com.google.ar.core" android:value="required" />
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
     </application>
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera.ar" android:required="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+
 
 </manifest>
