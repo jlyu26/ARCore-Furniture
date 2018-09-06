@@ -30,13 +30,19 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation 'com.google.ar:core:1.3.0'
-    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.3.0'
+    implementation 'com.google.ar:core:1.4.0'
+    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.4.0'
 }
 
 apply plugin: 'com.google.ar.sceneform.plugin'
 
-sceneform.asset('sampledata/Mug/Mug.obj',
+
+sceneform.asset('sampledata/Cup/Coffee Cup.obj',
         'default',
-        'sampledata/Mug/Mug.sfa',
-        'src/main/assets/Mug')
+        'sampledata/Cup/Coffee Cup.sfa',
+        'src/main/assets/Cup')
+
+sceneform.asset('sampledata/Sofa/model.obj',
+        'default',
+        'sampledata/Sofa/model.sfa',
+        'src/main/assets/Sofa')
