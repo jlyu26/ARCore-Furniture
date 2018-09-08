@@ -1,4 +1,12 @@
-# Android AR
+# ARCore Based Android Augmented Reality Furniture App
+
+An ARCore based app where users can virtually "try out" furnitures in their home.
+
+Stack: ARCore, Sceneform API, Cloud Anchor, Augmented Images, Firebase
+
+Click screenshot to watch demo on YouTube.
+
+[![ARCore Based Android Augmented Reality Furniture App](http://img.youtube.com/vi/ElnNIX3jhmQ/0.jpg)](http://www.youtube.com/watch?v=ElnNIX3jhmQ "ARCore Based Android Augmented Reality Furniture App")
 
 ## Deployment environment
 
@@ -18,15 +26,19 @@
 - Augmented Images: Overlay graphics on top of images.
 - Cloud Anchors: Allow users to have a share AR experience with others.
 
-
-
-
-
-
-
-
 ## About ARCore:
 
 1. Motion Tracking
 2. Environmental Understanding
 3. Light Estimation
+
+## References
+
+Models used in this project are downloaded from poly.google.com, links and authors information listed down below:
+
+Goat (Poly by Google): https://poly.google.com/view/d7dImmjtF8E
+Lamp (Anonymous): https://poly.google.com/view/9JPskaLwlIz
+Sofa (Poly by Google): https://poly.google.com/view/bwd4gui4RZ4
+Chair (Poly by Google): https://poly.google.com/view/88nXdqyGV06
+Table (Poly by Google): https://poly.google.com/view/8cnrwlAWqx7
+Mug (Poly by Google): https://poly.google.com/view/8-L4ibtXS8d
